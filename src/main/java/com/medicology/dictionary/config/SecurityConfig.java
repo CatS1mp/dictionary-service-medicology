@@ -17,7 +17,10 @@ import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -58,7 +61,15 @@ public class SecurityConfig {
 
         @Bean
         public OpenAPI medicologyOpenAPI() {
+                Server productionServer = new Server()
+                                .url("https://dictionary-service-medicology-production.up.railway.app")
+                                .description("Server chính thức trên Railway");
+
+                Server localServer = new Server()
+                                .url("http://localhost:8082")
+                                .description("Server chạy ở Local");
                 return new OpenAPI()
+                                .servers(List.of(productionServer, localServer))
                                 // 1. Định nghĩa cách thức bảo mật là JWT
                                 .components(new Components()
                                                 .addSecuritySchemes("bearerAuth",
