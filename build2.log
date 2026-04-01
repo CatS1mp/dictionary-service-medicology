@@ -1,0 +1,22 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< com:dictionary-service-medicology >------------------
+[INFO] Building Medicology's Auth Service 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ dictionary-service-medicology ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dictionary-service-medicology ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 44 source files with javac [debug parameters release 17] to target\classes
+[INFO] /C:/code/Medicology/dictionary-service-medicology/src/main/java/com/medicology/dictionary/entity/Tag.java: Some input files use or override a deprecated API.
+[INFO] /C:/code/Medicology/dictionary-service-medicology/src/main/java/com/medicology/dictionary/entity/Tag.java: Recompile with -Xlint:deprecation for details.
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  8.484 s
+[INFO] Finished at: 2026-03-29T14:19:24+07:00
+[INFO] ------------------------------------------------------------------------

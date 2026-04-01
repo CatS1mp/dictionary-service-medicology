@@ -1,0 +1,53 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -----------------< com:dictionary-service-medicology >------------------
+[INFO] Building Medicology's Auth Service 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ dictionary-service-medicology ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ dictionary-service-medicology ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 44 source files with javac [debug parameters release 17] to target\classes
+[INFO] /C:/code/Medicology/dictionary-service-medicology/src/main/java/com/medicology/dictionary/entity/Tag.java: Some input files use or override a deprecated API.
+[INFO] /C:/code/Medicology/dictionary-service-medicology/src/main/java/com/medicology/dictionary/entity/Tag.java: Recompile with -Xlint:deprecation for details.
+[INFO] -------------------------------------------------------------
+[ERROR] COMPILATION ERROR : 
+[INFO] -------------------------------------------------------------
+[ERROR] /C:/code/Medicology/dictionary-service-medicology/src/main/java/com/medicology/dictionary/controller/TagController.java:[31,44] cannot find symbol
+  symbol:   method getTagById(java.util.UUID)
+  location: variable tagService of type com.medicology.dictionary.service.TagService
+[ERROR] /C:/code/Medicology/dictionary-service-medicology/src/main/java/com/medicology/dictionary/controller/TagController.java:[36,19] cannot find symbol
+  symbol:   method updateTag(java.util.UUID,com.medicology.dictionary.dto.request.TagRequest)
+  location: variable tagService of type com.medicology.dictionary.service.TagService
+[ERROR] /C:/code/Medicology/dictionary-service-medicology/src/main/java/com/medicology/dictionary/controller/TagController.java:[42,19] cannot find symbol
+  symbol:   method deleteTag(java.util.UUID)
+  location: variable tagService of type com.medicology.dictionary.service.TagService
+[INFO] 3 errors 
+[INFO] -------------------------------------------------------------
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  5.194 s
+[INFO] Finished at: 2026-03-29T14:10:29+07:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project dictionary-service-medicology: Compilation failure: Compilation failure: 
+[ERROR] /C:/code/Medicology/dictionary-service-medicology/src/main/java/com/medicology/dictionary/controller/TagController.java:[31,44] cannot find symbol
+[ERROR]   symbol:   method getTagById(java.util.UUID)
+[ERROR]   location: variable tagService of type com.medicology.dictionary.service.TagService
+[ERROR] /C:/code/Medicology/dictionary-service-medicology/src/main/java/com/medicology/dictionary/controller/TagController.java:[36,19] cannot find symbol
+[ERROR]   symbol:   method updateTag(java.util.UUID,com.medicology.dictionary.dto.request.TagRequest)
+[ERROR]   location: variable tagService of type com.medicology.dictionary.service.TagService
+[ERROR] /C:/code/Medicology/dictionary-service-medicology/src/main/java/com/medicology/dictionary/controller/TagController.java:[42,19] cannot find symbol
+[ERROR]   symbol:   method deleteTag(java.util.UUID)
+[ERROR]   location: variable tagService of type com.medicology.dictionary.service.TagService
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
