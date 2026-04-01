@@ -10,4 +10,5 @@ import java.util.UUID;
 @Repository
 public interface UserBookmarkRepository extends JpaRepository<UserBookmark, UUID> {
     Optional<UserBookmark> findByUserIdAndArticleId(UUID userId, UUID articleId);
+    long countByArticleId(UUID articleId);
 }

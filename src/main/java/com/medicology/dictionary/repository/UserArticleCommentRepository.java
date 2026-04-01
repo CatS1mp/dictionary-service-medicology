@@ -9,5 +9,6 @@ import java.util.UUID;
 
 @Repository
 public interface UserArticleCommentRepository extends JpaRepository<UserArticleComment, UUID> {
-    List<UserArticleComment> findByArticleIdAndIsApprovedTrueAndParentCommentIsNullOrderByCreatedAtDesc(UUID articleId);
+    List<UserArticleComment> findByArticle_IdAndStatusAndParentCommentIsNullOrderByCreatedAtDesc(UUID articleId, String status);
+    long countByArticle_Id(UUID articleId);
 }

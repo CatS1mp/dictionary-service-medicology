@@ -46,6 +46,10 @@ public class UserArticleComment {
     @Builder.Default
     private Boolean isApproved = false;
 
+    @Column(name = "status", nullable = false, length = 20)
+    @Builder.Default
+    private String status = "PENDING";
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
