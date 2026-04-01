@@ -39,7 +39,7 @@ public class UserArticleComment {
     @Builder.Default
     private List<UserArticleComment> replies = new ArrayList<>();
 
-    @Column(name = "comment_text", nullable = false, columnDefinition = "NVARCHAR(MAX)")
+    @Column(name = "comment_text", nullable = false, columnDefinition = "TEXT")
     private String commentText;
 
     @Column(name = "is_approved")
