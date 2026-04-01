@@ -12,4 +12,6 @@ import java.util.UUID;
 public interface ArticleRelatedRepository extends JpaRepository<ArticleRelated, ArticleRelatedId> {
     List<ArticleRelated> findByArticleId(UUID articleId);
     void deleteByArticleId(UUID articleId);
+    void deleteByRelatedArticleId(UUID relatedArticleId);
+    void deleteByArticleIdAndRelatedArticleId(UUID articleId, UUID relatedArticleId);
 }

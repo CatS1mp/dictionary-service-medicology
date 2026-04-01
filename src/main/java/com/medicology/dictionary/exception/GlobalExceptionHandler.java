@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDateTime;
 
 @RestControllerAdvice
@@ -31,6 +32,17 @@ public class GlobalExceptionHandler {
                 LocalDateTime.now()
         );
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ResponseStatusException.class)
+    public ResponseEntity<ErrorResponse> handleResponseStatusException(ResponseStatusException ex) {
+        HttpStatus status = HttpStatus.valueOf(ex.getStatusCode().value());
+        ErrorResponse error = new ErrorResponse(
+                status.value(),
+                ex.getReason(),
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(error, status);
     }
 
     // 3. Xử lý tất cả các lỗi lạ khác (Tránh hiện Trace dài dòng)
