@@ -1,5 +1,6 @@
 package com.medicology.dictionary.service;
 
+import com.medicology.dictionary.dto.response.ArticleResponse;
 import com.medicology.dictionary.dto.response.InteractionSummaryResponse;
 import com.medicology.dictionary.dto.response.ViewStatisticsResponse;
 import com.medicology.dictionary.entity.Article;
@@ -16,9 +17,11 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -29,6 +32,7 @@ public class InteractionService {
     private final UserBookmarkRepository bookmarkRepo;
     private final UserArticleCommentRepository commentRepo;
     private final ArticleRepository articleRepo;
+    private final ArticleService articleService;
 
     @Transactional
     public void recordView(UUID articleId, UUID userId) {
@@ -65,6 +69,14 @@ public class InteractionService {
     @Transactional
     public void removeBookmark(UUID articleId, UUID userId) {
         bookmarkRepo.findByUserIdAndArticleId(userId, articleId).ifPresent(bookmarkRepo::delete);
+    }
+
+    @Transactional(readOnly = true)
+    public List<ArticleResponse> getBookmarks(UUID userId) {
+        return bookmarkRepo.findAllByUserIdOrderByCreatedAtDesc(userId).stream()
+                .map(UserBookmark::getArticle)
+                .map(articleService::toResponse)
+                .collect(Collectors.toList());
     }
 
     public InteractionSummaryResponse getInteractionSummary(UUID articleId) {

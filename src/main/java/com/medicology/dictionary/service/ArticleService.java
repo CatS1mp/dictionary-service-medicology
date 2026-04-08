@@ -118,6 +118,10 @@ public class ArticleService {
                 .collect(Collectors.toList());
     }
 
+    public ArticleResponse toResponse(Article article) {
+        return mapToResponse(article);
+    }
+
     @Transactional
     public void removeRelatedArticle(UUID articleId, UUID relatedArticleId) {
         articleRelatedRepository.deleteByArticleIdAndRelatedArticleId(articleId, relatedArticleId);
