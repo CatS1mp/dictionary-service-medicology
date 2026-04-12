@@ -8,6 +8,7 @@ import com.medicology.dictionary.service.AuthenticatedUserService;
 import com.medicology.dictionary.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -55,6 +56,7 @@ public class CommentController {
     }
 
     @PostMapping("/comments/{id}/approve")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> approveComment(@PathVariable UUID id) {
         commentService.approveComment(id);
         return ResponseEntity.ok().build();
