@@ -11,7 +11,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -53,11 +54,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 // Trong dictionary Service, ta không cần truy vấn DB User nữa, chỉ cần trích xuất email/id từ Token là đủ xác thực
                 // Kiểm tra tính hợp lệ của token
                 if (jwtDecoder.isTokenValid(jwt, "access")) {
-                    // 4. Khởi tạo đối tượng xác thực (chỉ có userIdentifier và ROLES rỗng)
+                    // 4. Khởi tạo đối tượng xác thực với role từ JWT
+                    String role = jwtDecoder.extractRole(jwt);
+                    List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+                    authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+                    if ("ADMIN".equals(role)) {
+                        authorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+                    }
+
                     UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                             userIdentifier,
                             null,
-                            Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
+                            authorities
                     );
 
                     authToken.setDetails(

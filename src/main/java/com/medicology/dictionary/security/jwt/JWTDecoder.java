@@ -38,6 +38,10 @@ public class JWTDecoder {
         return extractAllClaims(token).getSubject();
     }
 
+    public String extractRole(String token) {
+        return extractAllClaims(token).get("role", String.class);
+    }
+
     // 3. Hàm kiểm tra Token hợp lệ hay không
     public boolean isTokenValid(String token, String expectedType) {
         try {
