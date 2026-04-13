@@ -37,20 +37,8 @@ public class InteractionService {
     @Transactional
     public void recordView(UUID articleId, UUID userId) {
         ensureArticleExists(articleId);
-        Optional<UserArticleView> existingView = viewRepo.findByUserIdAndArticleId(userId, articleId);
-        if (existingView.isPresent()) {
-            UserArticleView view = existingView.get();
-            view.setViewCount(view.getViewCount() + 1);
-            view.setLastViewedAt(LocalDateTime.now());
-            viewRepo.save(view);
-        } else {
-            UserArticleView newView = UserArticleView.builder()
-                    .articleId(articleId)
-                    .userId(userId)
-                    .viewCount(1)
-                    .build();
-            viewRepo.save(newView);
-        }
+        LocalDateTime now = LocalDateTime.now();
+        viewRepo.upsertIncrementView(userId, articleId, now);
     }
 
     @Transactional

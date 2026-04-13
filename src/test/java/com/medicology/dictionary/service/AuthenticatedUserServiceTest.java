@@ -1,12 +1,12 @@
 package com.medicology.dictionary.service;
 
+import com.medicology.dictionary.wrapper.UserPrincipal;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,19 +23,30 @@ class AuthenticatedUserServiceTest {
     }
 
     @Test
-    void getCurrentUserIdUsesDeterministicUuidForStringPrincipal() {
-        String principal = "doctor@medicology.vn";
+    void getCurrentUserIdReturnsIdFromUserPrincipal() {
+        UUID id = UUID.randomUUID();
+        UserPrincipal principal = new UserPrincipal(id, "user@test.com", false);
         SecurityContextHolder.getContext().setAuthentication(
                 new UsernamePasswordAuthenticationToken(principal, null, List.of())
         );
 
-        UUID userId = authenticatedUserService.getCurrentUserId();
-
-        assertThat(userId).isEqualTo(UUID.nameUUIDFromBytes(principal.getBytes(StandardCharsets.UTF_8)));
+        assertThat(authenticatedUserService.getCurrentUserId()).isEqualTo(id);
     }
 
     @Test
     void getCurrentUserIdRejectsMissingAuthentication() {
+        assertThatThrownBy(authenticatedUserService::getCurrentUserId)
+                .isInstanceOf(ResponseStatusException.class)
+                .hasMessageContaining("401 UNAUTHORIZED");
+    }
+
+    @Test
+    void getCurrentUserIdRejectsNullIdOnPrincipal() {
+        UserPrincipal principal = new UserPrincipal(null, "user@test.com", false);
+        SecurityContextHolder.getContext().setAuthentication(
+                new UsernamePasswordAuthenticationToken(principal, null, List.of())
+        );
+
         assertThatThrownBy(authenticatedUserService::getCurrentUserId)
                 .isInstanceOf(ResponseStatusException.class)
                 .hasMessageContaining("401 UNAUTHORIZED");
