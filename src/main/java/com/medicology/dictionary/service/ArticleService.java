@@ -49,13 +49,19 @@ public class ArticleService {
         return mapToResponse(article);
     }
 
-    public ArticleResponse getArticleById(UUID articleId) {
+    public ArticleResponse getArticleById(UUID articleId, boolean includeUnpublished) {
         Article article = getArticleEntity(articleId);
+        if (!includeUnpublished && !Boolean.TRUE.equals(article.getIsPublished())) {
+            throw new ResponseStatusException(NOT_FOUND, "Article not found");
+        }
         return mapToResponse(article);
     }
 
-    public List<ArticleResponse> getAllArticles() {
-        return articleRepository.findAll().stream().map(this::mapToResponse).collect(Collectors.toList());
+    public List<ArticleResponse> getAllArticles(boolean includeUnpublished) {
+        List<Article> articles = includeUnpublished
+                ? articleRepository.findAll()
+                : articleRepository.findAllByIsPublishedTrueOrderByUpdatedAtDesc();
+        return articles.stream().map(this::mapToResponse).collect(Collectors.toList());
     }
 
     @Transactional

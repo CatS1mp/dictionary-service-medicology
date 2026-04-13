@@ -9,6 +9,7 @@ import com.medicology.dictionary.service.TagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,13 +29,17 @@ public class ArticleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ArticleResponse>> getAllArticles() {
-        return ResponseEntity.ok(articleService.getAllArticles());
+    public ResponseEntity<List<ArticleResponse>> getAllArticles(Authentication authentication) {
+        boolean admin = authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+        return ResponseEntity.ok(articleService.getAllArticles(admin));
     }
 
     @GetMapping("/{id:[0-9a-fA-F\\-]{36}}")
-    public ResponseEntity<ArticleResponse> getArticleById(@PathVariable UUID id) {
-        return ResponseEntity.ok(articleService.getArticleById(id));
+    public ResponseEntity<ArticleResponse> getArticleById(@PathVariable UUID id, Authentication authentication) {
+        boolean admin = authentication != null && authentication.getAuthorities().stream()
+                .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
+        return ResponseEntity.ok(articleService.getArticleById(id, admin));
     }
 
     @GetMapping("/{slug}")
@@ -64,6 +69,7 @@ public class ArticleController {
     }
 
     @PatchMapping("/{id}/unpublish")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> unpublishArticle(@PathVariable UUID id) {
         articleService.unpublishArticle(id);
         return ResponseEntity.ok().build();
