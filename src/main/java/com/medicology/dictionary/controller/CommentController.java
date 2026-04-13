@@ -6,6 +6,7 @@ import com.medicology.dictionary.dto.request.VoteRequest;
 import com.medicology.dictionary.dto.response.CommentResponse;
 import com.medicology.dictionary.service.AuthenticatedUserService;
 import com.medicology.dictionary.service.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -63,6 +64,7 @@ public class CommentController {
     }
 
     @PatchMapping("/comments/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> updateCommentStatus(
             @PathVariable UUID id,
             @RequestBody CommentStatusRequest request
@@ -72,7 +74,7 @@ public class CommentController {
     }
 
     @PostMapping("/comments/{id}/vote")
-    public ResponseEntity<Void> voteComment(@PathVariable UUID id, @RequestBody VoteRequest request) {
+    public ResponseEntity<Void> voteComment(@PathVariable UUID id, @Valid @RequestBody VoteRequest request) {
         UUID userId = authenticatedUserService.getCurrentUserId();
         commentService.voteComment(id, userId, request);
         return ResponseEntity.ok().build();

@@ -31,7 +31,7 @@ public class Article {
     @Column(nullable = false, unique = true, length = 300)
     private String slug;
 
-    @Column(name = "content_markdown", nullable = false, length = 255)
+    @Column(name = "content_markdown", nullable = false, columnDefinition = "TEXT")
     private String contentMarkdown;
 
     @Column(name = "author_admin_id")
