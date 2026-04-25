@@ -8,7 +8,8 @@ import java.util.UUID;
 public class ArticleRequest {
     private String name;
     private String slug;
+    private String contentJson;
+    private Integer contentVersion;
     private String contentMarkdown;
-    private UUID themeId;
     private UUID authorAdminId;
 }
