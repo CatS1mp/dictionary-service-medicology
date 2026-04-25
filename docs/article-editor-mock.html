@@ -1,0 +1,1223 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mẫu màn tạo bài viết</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --line: #e2e8f0;
+      --line-soft: #eef2f7;
+      --text: #0f172a;
+      --muted: #64748b;
+      --muted-soft: #94a3b8;
+      --primary: #3b82f6;
+      --primary-deep: #2563eb;
+      --sky: #1cb0f6;
+      --sky-soft: #e0f2fe;
+      --success: #16a34a;
+      --warning: #f97316;
+      --danger: #dc2626;
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --radius-sm: 10px;
+      --shadow: 0 14px 34px rgba(15, 23, 42, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Be Vietnam Pro", system-ui, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(28, 176, 246, 0.12), transparent 26%),
+        linear-gradient(180deg, #f8fbff 0%, #f8fafc 48%, #f3f7fb 100%);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 32px 24px 56px;
+    }
+
+    .hero {
+      background: linear-gradient(90deg, #37acef 0%, #9fcae2 100%);
+      border-radius: 10px;
+      padding: 22px 24px;
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      line-height: 1.08;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 980px;
+      font-size: 16px;
+      line-height: 1.6;
+      opacity: 0.96;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .status-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px solid #dbeafe;
+      color: #0369a1;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    .action-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .ghost-btn,
+    .primary-btn,
+    .success-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 118px;
+      padding: 11px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+      text-decoration: none;
+    }
+
+    .ghost-btn {
+      background: #ffffff;
+      border-color: var(--line);
+      color: #475569;
+    }
+
+    .primary-btn {
+      background: var(--primary);
+      border-color: var(--primary-deep);
+      color: white;
+    }
+
+    .success-btn {
+      background: #effcf3;
+      border-color: #bbf7d0;
+      color: #15803d;
+    }
+
+    .section {
+      background: var(--panel);
+      border: 1px solid #e9edf4;
+      border-radius: 18px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+
+    .section summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      border-bottom: 1px solid transparent;
+    }
+
+    .section[open] summary {
+      border-bottom-color: var(--line-soft);
+    }
+
+    .section summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .summary-main h2 {
+      margin: 0 0 6px;
+      font-size: 26px;
+      line-height: 1.1;
+      color: #0f172a;
+    }
+
+    .summary-main p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+      max-width: 860px;
+    }
+
+    .summary-side {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .summary-badge {
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .summary-arrow {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #64748b;
+      display: grid;
+      place-items: center;
+      font-size: 16px;
+      transition: transform 0.2s ease;
+    }
+
+    details[open] .summary-arrow {
+      transform: rotate(180deg);
+    }
+
+    .section-body {
+      padding: 22px;
+    }
+
+    .edit-grid {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .panel-head {
+      padding: 16px 18px 12px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .panel-head h3 {
+      margin: 0 0 5px;
+      font-size: 18px;
+    }
+
+    .panel-head p {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--muted);
+    }
+
+    .panel-body {
+      padding: 16px 18px 18px;
+    }
+
+    .template-card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: #ffffff;
+      margin-bottom: 12px;
+    }
+
+    .template-card.active {
+      border-color: var(--sky);
+      background: #f0f9ff;
+      box-shadow: 0 0 0 1px var(--sky);
+    }
+
+    .template-preview {
+      height: 82px;
+      border-radius: 10px;
+      border: 1px solid #dbeafe;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #eff6ff, #f8fafc);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .template-preview::before {
+      content: "";
+      position: absolute;
+      inset: 10px;
+      border-radius: 8px;
+      background: rgba(59, 130, 246, 0.08);
+    }
+
+    .template-preview.classic::after {
+      content: "";
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      top: 22px;
+      height: 8px;
+      background: #93c5fd;
+      border-radius: 999px;
+      box-shadow: 0 18px 0 #dbeafe, 0 36px 0 #dbeafe;
+    }
+
+    .template-preview.emergency::after {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, #fed7aa 0 20px, #ffffff 20px 100%);
+      box-shadow: inset 0 0 0 1px #fdba74;
+    }
+
+    .template-card h4 {
+      margin: 0 0 6px;
+      font-size: 14px;
+    }
+
+    .template-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .component-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .component-item {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .component-item.active {
+      border-color: var(--primary);
+      background: #fcfeff;
+      box-shadow: 0 0 0 1px var(--primary);
+    }
+
+    .component-item summary {
+      list-style: none;
+      cursor: pointer;
+    }
+
+    .component-item summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .component-summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    }
+
+    .component-summary-main {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .component-arrow {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #64748b;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .component-item[open] .component-arrow {
+      transform: rotate(180deg);
+    }
+
+    .component-body {
+      padding: 0 14px 14px;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    .component-name {
+      font-size: 14px;
+      font-weight: 800;
+      color: #0f172a;
+    }
+
+    .component-code {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #1d4ed8;
+      background: #eff6ff;
+      padding: 6px 9px;
+      border-radius: 999px;
+    }
+
+    .field-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .field {
+      display: grid;
+      grid-template-columns: 140px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+    }
+
+    .field label {
+      font-size: 12px;
+      font-weight: 700;
+      color: #475569;
+      padding-top: 11px;
+    }
+
+    .input,
+    .textarea,
+    .select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #ffffff;
+      padding: 11px 12px;
+      color: var(--text);
+      font: inherit;
+    }
+
+    .textarea {
+      min-height: 84px;
+      line-height: 1.55;
+      resize: vertical;
+    }
+
+    .mini-tools {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .mini-btn {
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #475569;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .mini-btn.add {
+      border-color: #bae6fd;
+      background: #f0f9ff;
+      color: #0369a1;
+    }
+
+    .preview-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 290px;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .student-frame {
+      border: 1px solid #dbeafe;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #ffffff;
+      box-shadow: var(--shadow);
+    }
+
+    .student-topbar {
+      background: linear-gradient(90deg, #f8fbff 0%, #eef7ff 100%);
+      border-bottom: 1px solid #e0eefc;
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .student-topbar strong {
+      font-size: 14px;
+      color: #0f172a;
+    }
+
+    .student-topbar span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .student-article {
+      padding: 26px;
+      background:
+        linear-gradient(180deg, rgba(240, 249, 255, 0.45) 0%, rgba(255,255,255,0) 140px),
+        #ffffff;
+    }
+
+    .student-article h1 {
+      margin: 0 0 12px;
+      font-size: 40px;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+    }
+
+    .student-article .lead {
+      margin: 0 0 20px;
+      font-size: 18px;
+      line-height: 1.7;
+      color: #475569;
+      max-width: 820px;
+    }
+
+    .student-article h2 {
+      margin: 28px 0 12px;
+      font-size: 28px;
+      line-height: 1.15;
+      color: #0f172a;
+    }
+
+    .student-article p {
+      margin: 0 0 16px;
+      font-size: 17px;
+      line-height: 1.82;
+      color: #334155;
+    }
+
+    .image-view {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid #dbeafe;
+      margin: 18px 0 22px;
+      background: linear-gradient(135deg, #dbeafe, #f0f9ff);
+      min-height: 320px;
+      position: relative;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .image-view::before {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at 28% 38%, rgba(59,130,246,.28), transparent 20%),
+        radial-gradient(circle at 66% 45%, rgba(15,23,42,.12), transparent 24%),
+        linear-gradient(180deg, rgba(255,255,255,.48), rgba(255,255,255,.08));
+    }
+
+    .image-caption {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      background: rgba(255,255,255,0.94);
+      padding: 13px 16px;
+      color: #475569;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .warning-card {
+      margin: 24px 0;
+      border: 1px solid #fdba74;
+      border-radius: 16px;
+      overflow: hidden;
+      background: linear-gradient(180deg, #fff7ed 0%, #ffffff 100%);
+    }
+
+    .warning-head {
+      background: #ffedd5;
+      color: #9a3412;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 11px 16px;
+    }
+
+    .warning-body {
+      padding: 16px;
+    }
+
+    .warning-body h3 {
+      margin: 0 0 10px;
+      font-size: 20px;
+      color: #7c2d12;
+    }
+
+    .warning-body ul {
+      margin: 0;
+      padding-left: 20px;
+      color: #7c2d12;
+      line-height: 1.8;
+      font-size: 15px;
+    }
+
+    .preview-side {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .meta-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #ffffff;
+      padding: 16px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    .meta-card h3 {
+      margin: 0 0 12px;
+      font-size: 15px;
+    }
+
+    .toc-list,
+    .toc-list ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .toc-list > li + li {
+      margin-top: 12px;
+    }
+
+    .toc-item {
+      display: block;
+      color: #0f172a;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.5;
+      text-decoration: none;
+    }
+
+    .toc-list ul {
+      margin-top: 8px;
+      padding-left: 16px;
+      border-left: 2px solid #e0eefc;
+    }
+
+    .toc-list ul li + li {
+      margin-top: 8px;
+    }
+
+    .toc-subitem {
+      display: block;
+      color: #475569;
+      font-size: 13px;
+      line-height: 1.5;
+      text-decoration: none;
+    }
+
+    .meta-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 0;
+      border-top: 1px solid var(--line-soft);
+      font-size: 13px;
+    }
+
+    .meta-row:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
+    .meta-row span {
+      color: var(--muted);
+    }
+
+    .meta-row strong {
+      text-align: right;
+      color: #0f172a;
+    }
+
+    .note {
+      border: 1px solid #dbeafe;
+      border-radius: 16px;
+      background: #f8fbff;
+      padding: 16px;
+    }
+
+    .note h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      color: #1d4ed8;
+    }
+
+    .note p,
+    .note li {
+      color: #334155;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    .note ul {
+      margin: 0;
+      padding-left: 18px;
+    }
+
+    .substeps {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .substep {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    .substep summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    }
+
+    .substep summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .substep-main {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .substep-number {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: #e8f1ff;
+      color: #1d4ed8;
+      display: grid;
+      place-items: center;
+      font-size: 12px;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .substep-main h3 {
+      margin: 0 0 4px;
+      font-size: 17px;
+    }
+
+    .substep-main p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .substep-arrow {
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #fff;
+      color: #64748b;
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      transition: transform 0.2s ease;
+    }
+
+    .substep[open] .substep-arrow {
+      transform: rotate(180deg);
+    }
+
+    .substep-body {
+      padding: 0 18px 18px;
+      border-top: 1px solid var(--line-soft);
+    }
+
+    @media (max-width: 1100px) {
+      .edit-grid,
+      .preview-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        padding: 20px 14px 36px;
+      }
+
+      .hero h1 {
+        font-size: 28px;
+      }
+
+      .summary-main h2 {
+        font-size: 22px;
+      }
+
+      .student-article {
+        padding: 18px;
+      }
+
+      .student-article h1 {
+        font-size: 32px;
+      }
+
+      .student-article h2 {
+        font-size: 24px;
+      }
+
+      .field {
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .field label {
+        padding-top: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>Component tạo màn bài viết</h1>
+      <p>
+        Mẫu này chỉ giữ lại đúng màn tạo bài viết như bạn yêu cầu: không navbar, không header.
+        Phần chính có hai khối lớn là <strong>Chỉnh sửa</strong> và <strong>Xem trước</strong>,
+        có thể thu gọn hoặc mở rộng như các heading trong Word. Màn này được hiểu là màn đến sau khi người dùng đã chọn xong mẫu bài viết ở bước trước đó.
+      </p>
+    </section>
+
+    <section class="toolbar">
+      <div class="status-group">
+        <span class="pill">Trạng thái hiện tại: Bản nháp</span>
+      </div>
+
+      <div class="action-group">
+        <button class="ghost-btn">Lưu nháp</button>
+        <button class="success-btn">Xuất bản</button>
+      </div>
+    </section>
+
+    <details class="section" open>
+      <summary>
+        <div class="summary-main">
+          <h2>Chỉnh sửa</h2>
+          <p>
+            Khu này chỉ hiển thị các component ở dạng rất đơn giản: tên component và các thuộc tính có thể nhập.
+            Ý tưởng là editor tập trung vào dữ liệu đầu vào thay vì nhìn giao diện quá phức tạp.
+          </p>
+        </div>
+        <div class="summary-side">
+          <span class="summary-badge">Biểu mẫu nhập liệu</span>
+          <span class="summary-arrow">⌄</span>
+        </div>
+      </summary>
+
+      <div class="section-body">
+        <div class="substeps">
+          <details class="substep" open>
+            <summary>
+              <div class="substep-main">
+                <div class="substep-number">01</div>
+                <div>
+                  <h3>Bước 1. Đặt tên và gắn nhãn bài viết</h3>
+                  <p>Điền thông tin nền để bài viết có định danh rõ ràng trước khi chỉnh nội dung đã được nạp từ mẫu.</p>
+                </div>
+              </div>
+              <span class="substep-arrow">⌄</span>
+            </summary>
+            <div class="substep-body">
+              <div class="field-grid">
+                <div class="field">
+                  <label>Tên bài viết</label>
+                  <input class="input" value="Viêm phổi ở người lớn" />
+                </div>
+                <div class="field">
+                  <label>Đường dẫn</label>
+                  <input class="input" value="viem-phoi-o-nguoi-lon" />
+                </div>
+                <div class="field">
+                  <label>Nhãn bài viết</label>
+                  <div class="mini-tools" style="margin-top:0;">
+                    <button class="mini-btn add">#BệnhHọc</button>
+                    <button class="mini-btn add">#TriệuChứng</button>
+                    <button class="mini-btn add">#ChẩnĐoán</button>
+                    <button class="mini-btn add">#ĐiềuTrị</button>
+                    <button class="mini-btn add">#CấpCứu</button>
+                    <button class="mini-btn add">#Thuốc</button>
+                  </div>
+                </div>
+                <div class="field">
+                  <label>Mô tả ngắn</label>
+                  <textarea class="textarea">Tổng quan nguyên nhân, triệu chứng, dấu hiệu nguy cấp, cận lâm sàng và hướng điều trị viêm phổi ở người lớn.</textarea>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <div class="edit-grid">
+          <section class="panel">
+            <div class="panel-head">
+              <h3>Kho component</h3>
+              <p>Thêm nhanh các component cần dùng cho bài viết.</p>
+            </div>
+
+            <div class="panel-body">
+              <div class="mini-tools" style="margin-top:0;">
+                <button class="mini-btn add">+ Thêm H1</button>
+                <button class="mini-btn add">+ Thêm H2</button>
+                <button class="mini-btn add">+ Thêm H3</button>
+                <button class="mini-btn add">+ Thêm đoạn văn</button>
+                <button class="mini-btn add">+ Thêm tệp / video</button>
+                <button class="mini-btn add">+ Thêm cảnh báo</button>
+                <button class="mini-btn add">+ Thêm hộp thuật ngữ</button>
+              </div>
+            </div>
+          </section>
+
+          <section class="panel">
+            <div class="panel-head">
+              <h3>Danh sách component trong bài viết</h3>
+              <p>
+                Mỗi component chỉ hiện phần tên và các thuộc tính nhập liệu.
+                Đây là cách hiển thị tối giản đúng theo ý bạn.
+              </p>
+            </div>
+
+            <div class="panel-body">
+              <div class="component-list">
+                <details class="component-item active" open>
+                  <summary class="component-summary">
+                    <div class="component-summary-main">
+                      <div class="component-name">Tiêu đề chính</div>
+                      <div class="component-code">H1</div>
+                    </div>
+                    <span class="component-arrow">⌄</span>
+                  </summary>
+
+                  <div class="component-body">
+                  <div class="field-grid">
+                    <div class="field">
+                      <label>Nội dung</label>
+                      <input class="input" value="Viêm phổi ở người lớn" />
+                    </div>
+                    <div class="field">
+                      <label>Khóa hiển thị</label>
+                      <select class="select">
+                        <option>Tiêu đề mặc định</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="mini-tools">
+                    <button class="mini-btn">Di chuyển lên</button>
+                    <button class="mini-btn">Di chuyển xuống</button>
+                    <button class="mini-btn">Ẩn tạm</button>
+                  </div>
+                  </div>
+                </details>
+
+                <details class="component-item">
+                  <summary class="component-summary">
+                    <div class="component-summary-main">
+                      <div class="component-name">Đoạn dẫn mở đầu</div>
+                      <div class="component-code">Lead</div>
+                    </div>
+                    <span class="component-arrow">⌄</span>
+                  </summary>
+
+                  <div class="component-body">
+                  <div class="field-grid">
+                    <div class="field">
+                      <label>Nội dung</label>
+                      <textarea class="textarea">Tổng quan nguyên nhân, triệu chứng, dấu hiệu nguy cấp, cận lâm sàng và hướng điều trị viêm phổi ở người lớn.</textarea>
+                    </div>
+                  </div>
+
+                  <div class="mini-tools">
+                    <button class="mini-btn">Di chuyển lên</button>
+                    <button class="mini-btn">Di chuyển xuống</button>
+                    <button class="mini-btn">Xóa</button>
+                  </div>
+                  </div>
+                </details>
+
+                <details class="component-item">
+                  <summary class="component-summary">
+                    <div class="component-summary-main">
+                      <div class="component-name">Tiêu đề phụ</div>
+                      <div class="component-code">H2</div>
+                    </div>
+                    <span class="component-arrow">⌄</span>
+                  </summary>
+
+                  <div class="component-body">
+                  <div class="field-grid">
+                    <div class="field">
+                      <label>Nội dung</label>
+                      <input class="input" value="Triệu chứng thường gặp" />
+                    </div>
+                  </div>
+
+                  <div class="mini-tools">
+                    <button class="mini-btn">Di chuyển lên</button>
+                    <button class="mini-btn">Di chuyển xuống</button>
+                    <button class="mini-btn">Xóa</button>
+                  </div>
+                  </div>
+                </details>
+
+                <details class="component-item">
+                  <summary class="component-summary">
+                    <div class="component-summary-main">
+                      <div class="component-name">Đoạn văn</div>
+                      <div class="component-code">Paragraph</div>
+                    </div>
+                    <span class="component-arrow">⌄</span>
+                  </summary>
+
+                  <div class="component-body">
+                  <div class="field-grid">
+                    <div class="field">
+                      <label>Nội dung</label>
+                      <textarea class="textarea">Sốt, ho, khó thở, đau ngực kiểu màng phổi và mệt mỏi là các biểu hiện thường gặp. Mức độ có thể thay đổi tùy tác nhân gây bệnh và thể trạng người bệnh.</textarea>
+                    </div>
+                  </div>
+
+                  <div class="mini-tools">
+                    <button class="mini-btn">Di chuyển lên</button>
+                    <button class="mini-btn">Di chuyển xuống</button>
+                    <button class="mini-btn">Xóa</button>
+                  </div>
+                  </div>
+                </details>
+
+                <details class="component-item">
+                  <summary class="component-summary">
+                    <div class="component-summary-main">
+                      <div class="component-name">Tệp minh họa</div>
+                      <div class="component-code">Media</div>
+                    </div>
+                    <span class="component-arrow">⌄</span>
+                  </summary>
+
+                  <div class="component-body">
+                  <div class="field-grid">
+                    <div class="field">
+                      <label>Thêm tệp</label>
+                      <input class="input" value="PNG, JPG, MP4 dưới 5MB" />
+                    </div>
+                    <div class="field">
+                      <label>Liên kết YouTube</label>
+                      <input class="input" value="https://www.youtube.com/watch?v=..." />
+                    </div>
+                    <div class="field">
+                      <label>Văn bản thay thế</label>
+                      <input class="input" value="Hình X-quang phổi có vùng đông đặc" />
+                    </div>
+                    <div class="field">
+                      <label>Chú thích</label>
+                      <textarea class="textarea">Hình minh họa X-quang ngực cho thấy tổn thương đông đặc ở vùng phổi phải.</textarea>
+                    </div>
+                  </div>
+
+                  <div class="mini-tools">
+                    <button class="mini-btn">Chọn tệp</button>
+                    <button class="mini-btn">Dán link YouTube</button>
+                    <button class="mini-btn">Xóa</button>
+                  </div>
+                  </div>
+                </details>
+
+                <details class="component-item">
+                  <summary class="component-summary">
+                    <div class="component-summary-main">
+                      <div class="component-name">Khối cảnh báo</div>
+                      <div class="component-code">Warning</div>
+                    </div>
+                    <span class="component-arrow">⌄</span>
+                  </summary>
+
+                  <div class="component-body">
+                  <div class="field-grid">
+                    <div class="field">
+                      <label>Tiêu đề cảnh báo</label>
+                      <input class="input" value="Cần nhập viện ngay nếu có" />
+                    </div>
+                    <div class="field">
+                      <label>Mức cảnh báo</label>
+                      <select class="select">
+                        <option>Cao</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>Danh sách ý</label>
+                      <textarea class="textarea">SpO2 dưới 92%
+Khó thở tăng dần
+Lú lẫn hoặc tụt huyết áp</textarea>
+                    </div>
+                  </div>
+
+                  <div class="mini-tools">
+                    <button class="mini-btn">Di chuyển lên</button>
+                    <button class="mini-btn">Di chuyển xuống</button>
+                    <button class="mini-btn">Xóa</button>
+                  </div>
+                  </div>
+                </details>
+              </div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </details>
+
+    <details class="section" open>
+      <summary>
+        <div class="summary-main">
+          <h2>Xem trước</h2>
+          <p>
+            Khu này mô phỏng bài viết khi học viên thực sự mở nội dung trên website.
+            Mục tiêu là nhìn thấy bài viết sẽ trông như thế nào ở góc nhìn người học, theo kiểu bài viết một cột lướt xuống liên tục.
+          </p>
+        </div>
+        <div class="summary-side">
+          <span class="summary-badge">Góc nhìn học viên</span>
+          <span class="summary-arrow">⌄</span>
+        </div>
+      </summary>
+
+      <div class="section-body">
+        <div class="preview-grid">
+            <section class="student-frame">
+              <div class="student-topbar">
+                <strong>Bài viết hiển thị kiểu cuộn dọc</strong>
+                <span>Giả lập trang bài viết người học sẽ đọc</span>
+              </div>
+
+            <article class="student-article">
+              <h1>Viêm phổi ở người lớn</h1>
+              <p class="lead">
+                Tổng quan nguyên nhân, triệu chứng, dấu hiệu nguy cấp, cận lâm sàng và hướng điều trị viêm phổi ở người lớn.
+              </p>
+
+              <div class="image-view">
+                <div class="image-caption">
+                  Hình minh họa X-quang ngực cho thấy tổn thương đông đặc ở vùng phổi phải.
+                </div>
+              </div>
+
+              <h2>Triệu chứng thường gặp</h2>
+              <p>
+                Sốt, ho, khó thở, đau ngực kiểu màng phổi và mệt mỏi là các biểu hiện thường gặp.
+                Mức độ có thể thay đổi tùy tác nhân gây bệnh và thể trạng người bệnh.
+              </p>
+
+              <div class="warning-card">
+                <div class="warning-head">Cảnh báo y khoa</div>
+                <div class="warning-body">
+                  <h3>Cần nhập viện ngay nếu có</h3>
+                  <ul>
+                    <li>SpO2 dưới 92%</li>
+                    <li>Khó thở tăng dần</li>
+                    <li>Lú lẫn hoặc tụt huyết áp</li>
+                  </ul>
+                </div>
+              </div>
+
+              <h2>Giải thích ngắn</h2>
+              <p>
+                Viêm phổi là tình trạng nhiễm trùng nhu mô phổi, có thể do vi khuẩn, virus hoặc các tác nhân khác.
+                Việc đánh giá sớm dấu hiệu nặng giúp quyết định người bệnh có cần nhập viện hay không.
+              </p>
+            </article>
+          </section>
+
+          <aside class="preview-side">
+            <section class="meta-card">
+              <h3>Mục lục bài viết</h3>
+              <ul class="toc-list">
+                <li>
+                  <a class="toc-item" href="#">Viêm phổi ở người lớn</a>
+                  <ul>
+                    <li><a class="toc-subitem" href="#">Triệu chứng thường gặp</a></li>
+                    <li><a class="toc-subitem" href="#">Giải thích ngắn</a></li>
+                  </ul>
+                </li>
+              </ul>
+            </section>
+          </aside>
+        </div>
+      </div>
+    </details>
+  </main>
+</body>
+</html>
