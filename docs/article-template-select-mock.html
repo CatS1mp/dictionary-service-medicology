@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Màn chọn mẫu bài viết</title>
+  <style>
+    :root {
+      --bg: #f8fafc;
+      --panel: #ffffff;
+      --line: #e2e8f0;
+      --line-soft: #eef2f7;
+      --text: #0f172a;
+      --muted: #64748b;
+      --primary: #3b82f6;
+      --primary-deep: #2563eb;
+      --success: #16a34a;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Be Vietnam Pro", system-ui, sans-serif;
+      background:
+        radial-gradient(circle at top right, rgba(28, 176, 246, 0.12), transparent 26%),
+        linear-gradient(180deg, #f8fbff 0%, #f8fafc 48%, #f3f7fb 100%);
+      color: var(--text);
+    }
+
+    .page {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 32px 24px 56px;
+    }
+
+    .hero {
+      background: linear-gradient(90deg, #37acef 0%, #9fcae2 100%);
+      border-radius: 10px;
+      padding: 22px 24px;
+      color: white;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      line-height: 1.08;
+    }
+
+    .hero p {
+      margin: 0;
+      max-width: 900px;
+      font-size: 16px;
+      line-height: 1.6;
+      opacity: 0.96;
+    }
+
+    .step-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: #ffffff;
+      border: 1px solid #dbeafe;
+      color: #0369a1;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .panel {
+      border: 1px solid #e9edf4;
+      border-radius: 18px;
+      background: var(--panel);
+      overflow: hidden;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+    }
+
+    .panel-head {
+      padding: 18px 20px 12px;
+      border-bottom: 1px solid var(--line-soft);
+    }
+
+    .panel-head h2,
+    .panel-head h3 {
+      margin: 0 0 6px;
+      font-size: 22px;
+    }
+
+    .panel-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .panel-body {
+      padding: 18px 20px 20px;
+    }
+
+    .template-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .template-card {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: #ffffff;
+      overflow: hidden;
+    }
+
+    .template-card.active {
+      border-color: #1cb0f6;
+      box-shadow: 0 0 0 1px #1cb0f6;
+      background: #fcfeff;
+    }
+
+    .template-visual {
+      height: 150px;
+      border-bottom: 1px solid #e0eefc;
+      background:
+        linear-gradient(180deg, rgba(240,249,255,0.7), rgba(255,255,255,0.95)),
+        linear-gradient(135deg, #dbeafe, #f0f9ff);
+      position: relative;
+    }
+
+    .template-visual::before {
+      content: "";
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      top: 28px;
+      height: 10px;
+      background: #93c5fd;
+      border-radius: 999px;
+      box-shadow: 0 26px 0 #dbeafe, 0 52px 0 #dbeafe;
+    }
+
+    .template-visual.emergency::before {
+      top: 24px;
+      height: 22px;
+      border-radius: 10px;
+      background: #fdba74;
+      box-shadow: 0 34px 0 #dbeafe, 0 60px 0 #dbeafe;
+    }
+
+    .template-content {
+      padding: 16px;
+    }
+
+    .template-content h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    .template-content p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .template-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .mini-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f8fbff;
+      border: 1px solid #dbeafe;
+      color: #0369a1;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .component-seed {
+      border-top: 1px solid var(--line-soft);
+      padding-top: 12px;
+      color: #475569;
+      font-size: 13px;
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ghost-btn,
+    .primary-btn,
+    .success-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-width: 126px;
+      padding: 11px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid transparent;
+    }
+
+    .ghost-btn {
+      background: #ffffff;
+      border-color: var(--line);
+      color: #475569;
+    }
+
+    .primary-btn {
+      background: var(--primary);
+      border-color: var(--primary-deep);
+      color: white;
+    }
+
+    .success-btn {
+      background: #effcf3;
+      border-color: #bbf7d0;
+      color: #15803d;
+    }
+
+    .note {
+      margin-top: 18px;
+      border: 1px solid #dbeafe;
+      border-radius: 16px;
+      background: #f8fbff;
+      padding: 16px;
+      color: #334155;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    @media (max-width: 980px) {
+      .template-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>Màn chọn mẫu bài viết</h1>
+      <p>
+        Đây là màn đi trước editor. Người dùng chỉ cần chọn một mẫu bài viết có sẵn tại đây, sau đó hệ thống nạp sẵn
+        JSON component của mẫu và chuyển sang màn soạn bài.
+      </p>
+    </section>
+
+    <section class="step-bar">
+      <span class="pill">Bước 1: Chọn mẫu bài viết</span>
+      <span class="pill">Bước 2: Chuyển sang màn soạn bài</span>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <h3>Chọn một mẫu bài viết có sẵn</h3>
+        <p>Mỗi mẫu đã chứa trước một bộ component cơ bản để người viết không phải tạo bài từ số 0.</p>
+      </div>
+      <div class="panel-body">
+        <div class="template-grid">
+          <article class="template-card active">
+            <div class="template-visual"></div>
+            <div class="template-content">
+              <h3>Mẫu bệnh học cơ bản</h3>
+              <p>Phù hợp cho bài giới thiệu bệnh, triệu chứng, hình minh họa, cảnh báo và hướng điều trị cơ bản.</p>
+              <div class="template-meta">
+                <span class="mini-pill">Cuộn dọc một cột</span>
+                <span class="mini-pill">Khởi tạo 6 component</span>
+              </div>
+              <div class="component-seed">
+                Component khởi tạo sẵn: <strong>H1</strong>, <strong>đoạn mở đầu</strong>, <strong>H2</strong>,
+                <strong>đoạn văn</strong>, <strong>media</strong>, <strong>cảnh báo</strong>.
+              </div>
+              <div class="actions">
+                <button class="ghost-btn">Xem JSON mẫu</button>
+                <button class="primary-btn">Dùng mẫu này</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="template-card">
+            <div class="template-visual emergency"></div>
+            <div class="template-content">
+              <h3>Mẫu cấp cứu nhanh</h3>
+              <p>Ưu tiên phần cảnh báo và xử trí ngay ở đầu bài viết, phù hợp cho các nội dung khẩn cấp.</p>
+              <div class="template-meta">
+                <span class="mini-pill">Cuộn dọc một cột</span>
+                <span class="mini-pill">Khởi tạo 5 component</span>
+              </div>
+              <div class="component-seed">
+                Component khởi tạo sẵn: <strong>H1</strong>, <strong>cảnh báo</strong>, <strong>H2</strong>,
+                <strong>đoạn văn</strong>, <strong>media</strong>.
+              </div>
+              <div class="actions">
+                <button class="ghost-btn">Xem JSON mẫu</button>
+                <button class="ghost-btn">Dùng mẫu này</button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="note">
+          Sau khi chọn mẫu, hệ thống sẽ chuyển sang màn editor tại
+          <strong>`article-editor-mock.html`</strong> và nạp sẵn các component của mẫu vào danh sách chỉnh sửa.
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
