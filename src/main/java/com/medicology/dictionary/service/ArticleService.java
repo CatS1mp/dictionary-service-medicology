@@ -35,8 +35,9 @@ public class ArticleService {
         Article article = Article.builder()
                 .name(request.getName())
                 .slug(request.getSlug())
+                .contentJson(request.getContentJson())
+                .contentVersion(request.getContentVersion() != null ? request.getContentVersion() : 1)
                 .contentMarkdown(request.getContentMarkdown())
-                .themeId(request.getThemeId())
                 .authorAdminId(request.getAuthorAdminId())
                 .isPublished(false)
                 .build();
@@ -85,8 +86,9 @@ public class ArticleService {
         Article article = getArticleEntity(id);
         article.setName(request.getName());
         article.setSlug(request.getSlug());
+        article.setContentJson(request.getContentJson());
+        article.setContentVersion(request.getContentVersion() != null ? request.getContentVersion() : article.getContentVersion());
         article.setContentMarkdown(request.getContentMarkdown());
-        article.setThemeId(request.getThemeId());
         article.setAuthorAdminId(request.getAuthorAdminId());
         articleRepository.save(article);
     }
@@ -136,9 +138,10 @@ public class ArticleService {
     private ArticleResponse mapToResponse(Article article) {
         ArticleResponse res = new ArticleResponse();
         res.setId(article.getId());
-        res.setThemeId(article.getThemeId());
         res.setName(article.getName());
         res.setSlug(article.getSlug());
+        res.setContentJson(article.getContentJson());
+        res.setContentVersion(article.getContentVersion());
         res.setContentMarkdown(article.getContentMarkdown());
         res.setAuthorAdminId(article.getAuthorAdminId());
         res.setIsPublished(article.getIsPublished());

@@ -35,7 +35,7 @@ public class ArticleController {
         return ResponseEntity.ok(articleService.getAllArticles(admin));
     }
 
-    @GetMapping("/{id:[0-9a-fA-F\\-]{36}}")
+    @GetMapping("/id/{id:[0-9a-fA-F\\-]{36}}")
     public ResponseEntity<ArticleResponse> getArticleById(@PathVariable UUID id, Authentication authentication) {
         boolean admin = authentication != null && authentication.getAuthorities().stream()
                 .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));

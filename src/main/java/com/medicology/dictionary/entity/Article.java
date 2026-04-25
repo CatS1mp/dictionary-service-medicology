@@ -22,16 +22,20 @@ public class Article {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @Column(name = "theme_id", nullable = false)
-    private UUID themeId;
-
     @Column(nullable = false, length = 300)
     private String name;
 
     @Column(nullable = false, unique = true, length = 300)
     private String slug;
 
-    @Column(name = "content_markdown", nullable = false, columnDefinition = "TEXT")
+    @Column(name = "content_json", columnDefinition = "TEXT")
+    private String contentJson;
+
+    @Column(name = "content_version")
+    @Builder.Default
+    private Integer contentVersion = 1;
+
+    @Column(name = "content_markdown", columnDefinition = "TEXT")
     private String contentMarkdown;
 
     @Column(name = "author_admin_id")

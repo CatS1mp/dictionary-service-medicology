@@ -9,9 +9,10 @@ import java.util.UUID;
 @Data
 public class ArticleResponse {
     private UUID id;
-    private UUID themeId;
     private String name;
     private String slug;
+    private String contentJson;
+    private Integer contentVersion;
     private String contentMarkdown;
     private UUID authorAdminId;
     private Boolean isPublished;
