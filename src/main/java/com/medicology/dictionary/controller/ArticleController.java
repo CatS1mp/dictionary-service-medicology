@@ -1,5 +1,6 @@
 package com.medicology.dictionary.controller;
 
+import com.medicology.dictionary.common.pagination.PaginatedResponse;
 import com.medicology.dictionary.dto.request.ArticleRequest;
 import com.medicology.dictionary.dto.request.RelatedArticleRequest;
 import com.medicology.dictionary.dto.response.ArticleResponse;
@@ -29,10 +30,13 @@ public class ArticleController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ArticleResponse>> getAllArticles(Authentication authentication) {
+    public ResponseEntity<PaginatedResponse<ArticleResponse>> getAllArticles(
+            Authentication authentication,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "20") int size) {
         boolean admin = authentication != null && authentication.getAuthorities().stream()
                 .anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
-        return ResponseEntity.ok(articleService.getAllArticles(admin));
+        return ResponseEntity.ok(PaginatedResponse.fromList(articleService.getAllArticles(admin), page, size));
     }
 
     @GetMapping("/id/{id:[0-9a-fA-F\\-]{36}}")
