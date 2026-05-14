@@ -63,6 +63,38 @@ Mapping chính:
 - Endpoint update/delete thường trả `200 OK` với body rỗng
 - Các endpoint read trả list/DTO trực tiếp
 
+### 3.4 Chuẩn dữ liệu `contentJson` cho bài viết
+
+- Dữ liệu lưu trong `contentJson` theo dạng:
+
+```json
+{
+  "version": 2,
+  "blocks": [
+    {
+      "id": "uuid-or-string",
+      "componentCode": "H2",
+      "componentType": "heading",
+      "name": "Tiêu đề mục",
+      "level": 2,
+      "data": { "content": "..." }
+    }
+  ]
+}
+```
+
+- **Breaking change:** từ bản này, payload cũ không đạt schema mới sẽ bị từ chối.
+- `contentJson.version` bắt buộc = `2`.
+- `blocks[]` bắt buộc là mảng object; mỗi block phải có đầy đủ:
+  - `id` (string, không rỗng)
+  - `componentCode` (string, không rỗng)
+  - `componentType` (string, không rỗng)
+  - `name` (string, không rỗng)
+  - `level` (integer trong khoảng `1..3`)
+  - `data` (object JSON)
+- `contentVersion` trong `ArticleRequest` bắt buộc = `2`.
+- Heading hiển thị thực tế do FE suy luận từ `componentCode/componentType/data` + `level`, BE không transform nội dung.
+
 ## 4. Tóm tắt mapping theo màn hình
 
 | Màn hình / flow | Endpoint chính |
@@ -77,6 +109,7 @@ Mapping chính:
 | Moderation comment | `POST /api/dictionary/comments/{id}/approve`, `PATCH /api/dictionary/comments/{id}/status` |
 | Bookmark và tương tác bài viết | `POST/DELETE /api/dictionary/articles/{articleId}/bookmark`, `POST /api/dictionary/articles/{articleId}/view` |
 | Danh sách bookmark của tôi | `GET /api/dictionary/users/me/bookmarks` |
+| Upload ảnh infographic cho admin | `POST /api/dictionary/admin/assets` + `GET /api/dictionary/assets/{fileName}` |
 
 ## 5. Nhóm API — Article và taxonomy
 
@@ -86,6 +119,7 @@ Mapping chính:
   - **Mục đích:** Tạo bài viết mới
   - **Body:** `ArticleRequest`
   - **Response:** `200 OK`, `UUID` của article mới
+  - **Validation bắt buộc:** `contentVersion=2` và `contentJson` đạt schema v2 (nếu sai trả `400`)
   - **Ghi chú:** Có `@PreAuthorize("hasRole('ADMIN')")`
 - `GET /api/dictionary/articles`
   - **Mục đích:** Lấy danh sách toàn bộ article
@@ -103,6 +137,7 @@ Mapping chính:
   - **Mục đích:** Cập nhật bài viết
   - **Body:** `ArticleRequest`
   - **Response:** `200 OK`, body rỗng
+  - **Validation bắt buộc:** `contentVersion=2` và `contentJson` đạt schema v2 (nếu sai trả `400`)
   - **Ghi chú:** Có guard admin
 - `DELETE /api/dictionary/articles/{id}`
   - **Mục đích:** Xóa bài viết
@@ -140,6 +175,19 @@ Mapping chính:
   - **Mục đích:** Xóa liên kết bài liên quan
   - **Response:** `200 OK`, body rỗng
   - **Ghi chú:** Có guard admin
+- `POST /api/dictionary/admin/assets`
+  - **Mục đích:** Upload file ảnh phục vụ block infographic/media trong editor
+  - **Body:** `multipart/form-data`, field bắt buộc `file`
+  - **Response:** `200 OK`, `DictionaryAssetUploadResponse`
+    - `assetId`: id nội bộ của file
+    - `url`: đường dẫn dùng trực tiếp trong `block.data.imageUrl`
+    - `fileName`, `contentType`, `sizeBytes`
+  - **Validation:** chỉ cho MIME image (`png/jpeg/webp/gif`), giới hạn kích thước theo config
+  - **Auth:** `ROLE_ADMIN`
+  - **Supabase (tuỳ chọn):** Nếu cấu hình `DICTIONARY_SUPABASE_URL`, `DICTIONARY_SUPABASE_BUCKET`, `DICTIONARY_SUPABASE_SERVICE_ROLE_KEY` (xem `application.properties`), file được đẩy lên Storage bucket và `url` trả về là URL public `.../storage/v1/object/public/...`. Bucket cần **public** (hoặc dùng URL signed ở vòng sau). Nếu thiếu cấu hình Supabase, service ghi file **local** như cũ và `url` trỏ tới `GET /api/dictionary/assets/{fileName}`.
+- `GET /api/dictionary/assets/{fileName}`
+  - **Mục đích:** Trả binary asset đã upload
+  - **Response:** `200 OK` với content-type tương ứng, body là file
 - `POST /api/dictionary/tags`
   - **Mục đích:** Tạo tag
   - **Body:** `TagRequest`
