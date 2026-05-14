@@ -11,6 +11,7 @@ import java.util.UUID;
 @Repository
 public interface ArticleTagRepository extends JpaRepository<ArticleTag, ArticleTagId> {
     List<ArticleTag> findByArticleId(UUID articleId);
+    List<ArticleTag> findByArticleIdIn(List<UUID> articleIds);
     void deleteByArticleId(UUID articleId);
     void deleteByTagId(UUID tagId);
     void deleteByArticleIdAndTagId(UUID articleId, UUID tagId);
