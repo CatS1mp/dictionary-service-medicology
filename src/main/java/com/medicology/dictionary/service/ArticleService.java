@@ -26,17 +26,21 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
+    private static final int CONTENT_SCHEMA_VERSION = ContentJsonContractValidator.REQUIRED_CONTENT_VERSION;
+
     private final ArticleRepository articleRepository;
     private final ArticleTagRepository articleTagRepository;
     private final ArticleRelatedRepository articleRelatedRepository;
+    private final ContentJsonContractValidator contentJsonContractValidator;
 
     @Transactional
     public UUID createArticle(ArticleRequest request) {
+        validateContentContract(request);
         Article article = Article.builder()
                 .name(request.getName())
                 .slug(request.getSlug())
                 .contentJson(request.getContentJson())
-                .contentVersion(request.getContentVersion() != null ? request.getContentVersion() : 1)
+                .contentVersion(CONTENT_SCHEMA_VERSION)
                 .contentMarkdown(request.getContentMarkdown())
                 .authorAdminId(request.getAuthorAdminId())
                 .isPublished(false)
@@ -83,11 +87,12 @@ public class ArticleService {
 
     @Transactional
     public void updateArticle(UUID id, ArticleRequest request) {
+        validateContentContract(request);
         Article article = getArticleEntity(id);
         article.setName(request.getName());
         article.setSlug(request.getSlug());
         article.setContentJson(request.getContentJson());
-        article.setContentVersion(request.getContentVersion() != null ? request.getContentVersion() : article.getContentVersion());
+        article.setContentVersion(CONTENT_SCHEMA_VERSION);
         article.setContentMarkdown(request.getContentMarkdown());
         article.setAuthorAdminId(request.getAuthorAdminId());
         articleRepository.save(article);
@@ -166,5 +171,15 @@ public class ArticleService {
     private Article getArticleEntity(UUID articleId) {
         return articleRepository.findById(articleId)
                 .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Article not found"));
+    }
+
+    private void validateContentContract(ArticleRequest request) {
+        if (request.getContentVersion() == null || request.getContentVersion() != CONTENT_SCHEMA_VERSION) {
+            throw new ResponseStatusException(
+                    BAD_REQUEST,
+                    "contentVersion must be " + CONTENT_SCHEMA_VERSION
+            );
+        }
+        contentJsonContractValidator.validateOrThrow(request.getContentJson());
     }
 }

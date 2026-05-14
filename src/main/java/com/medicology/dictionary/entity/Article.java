@@ -33,7 +33,7 @@ public class Article {
 
     @Column(name = "content_version")
     @Builder.Default
-    private Integer contentVersion = 1;
+    private Integer contentVersion = 2;
 
     @Column(name = "content_markdown", columnDefinition = "TEXT")
     private String contentMarkdown;
