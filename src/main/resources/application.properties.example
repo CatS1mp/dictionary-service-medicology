@@ -1,0 +1,29 @@
+# Application example for Dictionary Service
+spring.application.name=dictionary-service-medicology
+spring.profiles.active=dev
+server.port=8082
+
+# Database (PostgreSQL sample)
+spring.datasource.url=jdbc:postgresql://localhost:5432/medicology_dict
+spring.datasource.username=postgres
+spring.datasource.password=postgres
+spring.jpa.hibernate.ddl-auto=validate
+spring.jpa.open-in-view=false
+
+# Observability
+management.endpoints.web.exposure.include=health,info
+logging.level.org.springframework=INFO
+
+# OpenAPI / Swagger
+springdoc.api-docs.path=/v3/api-docs
+springdoc.swagger-ui.path=/swagger-ui/index.html
+
+# Resource Server (JWT) — choose one approach
+# spring.security.oauth2.resourceserver.jwt.issuer-uri=http://localhost:8081
+# spring.security.oauth2.resourceserver.jwt.jwk-set-uri=http://localhost:8081/.well-known/jwks.json
+# spring.security.oauth2.resourceserver.jwt.public-key-location=classpath:public.pem
+
+# Optional: external storage (e.g., Supabase) for assets
+# DICTIONARY_SUPABASE_URL=
+# DICTIONARY_SUPABASE_BUCKET=
+# DICTIONARY_SUPABASE_SERVICE_ROLE_KEY=
