@@ -11,7 +11,7 @@
 	<groupId>com</groupId>
 	<artifactId>dictionary-service-medicology</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Medicology&apos;s Auth Service</name>
+	<name>Medicology&apos;s Dictionary Service</name>
 	<description>Spring Boot BE for dictionary service</description>
 	<url/>
 	<licenses>
