@@ -16,4 +16,9 @@ public class DictionaryAiProperties {
     private boolean groundingEnabled = false;
     private double relevanceThreshold = 0.25d;
     private int candidateLimit = 12;
+
+    private boolean qaEnabled = true;
+    private int qaMaxContextChars = 80_000;
+    private int qaMaxQuestionChars = 500;
+    private int qaDailyLimitPerUser = 30;
 }
