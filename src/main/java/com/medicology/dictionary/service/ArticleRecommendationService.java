@@ -13,13 +13,8 @@ import com.medicology.dictionary.repository.ArticleRepository;
 import com.medicology.dictionary.repository.ArticleTagRepository;
 import com.medicology.dictionary.repository.TagRepository;
 import com.medicology.dictionary.repository.UserArticleViewRepository;
-import java.net.URI;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
-import java.time.Duration;
+import com.medicology.dictionary.service.ai.GeminiGenerateContentClient;
+import com.medicology.dictionary.service.ai.GeminiGenerateOptions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
@@ -50,6 +45,7 @@ public class ArticleRecommendationService {
     private final TagRepository tagRepository;
     private final UserArticleViewRepository userArticleViewRepository;
     private final ObjectMapper objectMapper;
+    private final GeminiGenerateContentClient geminiClient;
 
     public ArticleRecommendationResponse recommend(UUID userId, ArticleRecommendationRequest request) {
         int requestedLimit = normalizeLimit(request == null ? null : request.getLimit());
@@ -126,43 +122,16 @@ public class ArticleRecommendationService {
         if (candidates.isEmpty()) {
             return List.of();
         }
-        if (aiProperties.getApiKey() == null || aiProperties.getApiKey().isBlank()) {
+        if (!geminiClient.isConfigured()) {
             log.warn("dictionary_ai_recommendation_disabled reason=missing_api_key");
             return List.of();
         }
 
         try {
             String prompt = buildPrompt(attempts, candidates, limit);
-            String requestBody = buildProviderRequest(prompt);
-            String endpoint = resolveEndpoint();
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(appendApiKey(endpoint, aiProperties.getApiKey())))
-                    .timeout(Duration.ofSeconds(20))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody))
-                    .build();
-
-            HttpClient client = HttpClient.newBuilder()
-                    .connectTimeout(Duration.ofSeconds(10))
-                    .build();
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() < 200 || response.statusCode() >= 300) {
-                log.warn(
-                        "dictionary_ai_recommendation_provider_error status={} body={}",
-                        response.statusCode(),
-                        truncate(response.body(), 500));
-                return List.of();
-            }
-
-            JsonNode providerRoot = objectMapper.readTree(response.body());
-            String aiJsonText = providerRoot.path("candidates")
-                    .path(0)
-                    .path("content")
-                    .path("parts")
-                    .path(0)
-                    .path("text")
-                    .asText("");
+            String aiJsonText = geminiClient
+                    .generateJsonText(prompt, GeminiGenerateOptions.recommendation(aiProperties.isGroundingEnabled()))
+                    .orElse("");
             if (aiJsonText.isBlank()) {
                 return List.of();
             }
@@ -289,34 +258,6 @@ public class ArticleRecommendationService {
                 - do not invent articleId outside candidate list
                 - reason must be short and practical
                 """.formatted(limit, safeText(attemptsContext), safeText(articleContext), limit);
-    }
-
-    private String buildProviderRequest(String prompt) throws Exception {
-        List<Map<String, Object>> tools = new ArrayList<>();
-        if (aiProperties.isGroundingEnabled()) {
-            tools.add(Map.of("google_search", Map.of()));
-        }
-        Map<String, Object> requestPayload = new LinkedHashMap<>();
-        requestPayload.put("contents", List.of(Map.of("parts", List.of(Map.of("text", prompt)))));
-        requestPayload.put("generationConfig", Map.of(
-                "temperature", 0.1,
-                "responseMimeType", "application/json"));
-        if (!tools.isEmpty()) {
-            requestPayload.put("tools", tools);
-        }
-        return objectMapper.writeValueAsString(requestPayload);
-    }
-
-    private String resolveEndpoint() {
-        if (aiProperties.getEndpoint() != null && !aiProperties.getEndpoint().isBlank()) {
-            return aiProperties.getEndpoint().trim();
-        }
-        return "https://generativelanguage.googleapis.com/v1beta/models/" + aiProperties.getModel() + ":generateContent";
-    }
-
-    private String appendApiKey(String endpoint, String apiKey) {
-        String delimiter = endpoint.contains("?") ? "&" : "?";
-        return endpoint + delimiter + "key=" + URLEncoder.encode(apiKey, StandardCharsets.UTF_8);
     }
 
     private Set<String> collectContextTerms(List<RecommendationAttemptPayload> attempts) {
