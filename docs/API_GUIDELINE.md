@@ -110,6 +110,7 @@ Mapping chính:
 | Bookmark và tương tác bài viết | `POST/DELETE /api/dictionary/articles/{articleId}/bookmark`, `POST /api/dictionary/articles/{articleId}/view` |
 | Danh sách bookmark của tôi | `GET /api/dictionary/users/me/bookmarks` |
 | Upload ảnh infographic cho admin | `POST /api/dictionary/admin/assets` + `GET /api/dictionary/assets/{fileName}` |
+| Hỏi đáp AI theo nội dung bài viết | `POST /api/dictionary/articles/{articleId}/qa`, `GET /api/dictionary/articles/{articleId}/qa/suggested-questions` |
 
 ## 5. Nhóm API — Article và taxonomy
 
@@ -270,6 +271,20 @@ Mapping chính:
 - `GET /api/dictionary/users/me/bookmarks`
   - **Mục đích:** Lấy danh sách bookmark của user hiện tại
   - **Response:** `200 OK`, `List<ArticleResponse>`
+
+### 7.2 Hỏi đáp AI bám nội dung bài viết
+
+- `POST /api/dictionary/articles/{articleId}/qa`
+  - **Mục đích:** Trả lời câu hỏi của learner dựa trên `contentJson` / `contentMarkdown` của bài đã publish
+  - **Auth:** JWT bắt buộc
+  - **Body:** `ArticleQaRequest` (`question`, `conversation[]` tùy chọn, tối đa 4 message gần nhất)
+  - **Response:** `200 OK`, `ArticleQaResponse` (`answer`, `citations[]`, `outOfScope`, `confidence`, `disclaimer`)
+  - **Lỗi:** `403` bài chưa publish; `429` vượt giới hạn/ngày; `503` AI chưa cấu hình hoặc provider lỗi
+- `GET /api/dictionary/articles/{articleId}/qa/suggested-questions`
+  - **Mục đích:** Gợi ý câu hỏi từ mục lục bài (rule-based, không gọi AI)
+  - **Response:** `200 OK`, `ArticleQaSuggestedQuestionsResponse`
+
+Cấu hình env: `dictionary.ai.qa-enabled`, `dictionary.ai.qa-max-context-chars`, `dictionary.ai.qa-max-question-chars`, `dictionary.ai.qa-daily-limit-per-user` (dùng chung `dictionary.ai.api-key`).
 
 ## 8. Webhook / callback (nếu có)
 
