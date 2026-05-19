@@ -50,14 +50,14 @@ public class ArticleService {
 
     public ArticleResponse getArticleBySlug(String slug) {
         Article article = articleRepository.findBySlugAndIsPublishedTrue(slug)
-            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Article not found"));
+            .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Không tìm thấy bài viết."));
         return mapToResponse(article);
     }
 
     public ArticleResponse getArticleById(UUID articleId, boolean includeUnpublished) {
         Article article = getArticleEntity(articleId);
         if (!includeUnpublished && !Boolean.TRUE.equals(article.getIsPublished())) {
-            throw new ResponseStatusException(NOT_FOUND, "Article not found");
+            throw new ResponseStatusException(NOT_FOUND, "Không tìm thấy bài viết.");
         }
         return mapToResponse(article);
     }
@@ -109,7 +109,7 @@ public class ArticleService {
     @Transactional
     public void addRelatedArticle(UUID articleId, UUID relatedArticleId) {
         if (articleId.equals(relatedArticleId)) {
-            throw new ResponseStatusException(BAD_REQUEST, "An article cannot relate to itself");
+            throw new ResponseStatusException(BAD_REQUEST, "Bài viết không thể liên kết với chính nó.");
         }
 
         Article article = getArticleEntity(articleId);
@@ -170,7 +170,7 @@ public class ArticleService {
 
     private Article getArticleEntity(UUID articleId) {
         return articleRepository.findById(articleId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Article not found"));
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Không tìm thấy bài viết."));
     }
 
     private void validateContentContract(ArticleRequest request) {

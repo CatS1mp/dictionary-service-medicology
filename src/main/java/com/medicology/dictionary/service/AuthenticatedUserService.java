@@ -19,17 +19,17 @@ public class AuthenticatedUserService {
         if (authentication == null
                 || !authentication.isAuthenticated()
                 || authentication instanceof AnonymousAuthenticationToken) {
-            throw new ResponseStatusException(UNAUTHORIZED, "Authentication is required");
+            throw new ResponseStatusException(UNAUTHORIZED, "Yêu cầu đăng nhập.");
         }
 
         Object principal = authentication.getPrincipal();
         if (principal instanceof UserPrincipal userPrincipal) {
             if (userPrincipal.getId() == null) {
-                throw new ResponseStatusException(UNAUTHORIZED, "Token missing user id");
+                throw new ResponseStatusException(UNAUTHORIZED, "Token thiếu mã người dùng.");
             }
             return userPrincipal.getId();
         }
 
-        throw new ResponseStatusException(UNAUTHORIZED, "Invalid authentication principal");
+        throw new ResponseStatusException(UNAUTHORIZED, "Thông tin xác thực không hợp lệ.");
     }
 }

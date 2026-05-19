@@ -61,7 +61,7 @@ public class ArticleTemplateService {
 
     private ArticleTemplate getTemplateEntity(UUID id) {
         return articleTemplateRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Template not found"));
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Không tìm thấy mẫu bài viết."));
     }
 
     private ArticleTemplateResponse mapToResponse(ArticleTemplate template) {

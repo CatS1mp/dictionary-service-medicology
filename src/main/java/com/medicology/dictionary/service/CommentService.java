@@ -39,7 +39,7 @@ public class CommentService {
     @Transactional
     public UUID createComment(UUID articleId, UUID userId, CommentRequest request) {
         Article article = articleRepo.findById(articleId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Article not found"));
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Không tìm thấy bài viết."));
         UserArticleComment comment = UserArticleComment.builder()
                 .article(article)
                 .userId(userId)
@@ -83,7 +83,7 @@ public class CommentService {
     public void updateComment(UUID commentId, UUID userId, CommentRequest request) {
         UserArticleComment comment = getCommentEntity(commentId);
         if (!comment.getUserId().equals(userId)) {
-            throw new ResponseStatusException(FORBIDDEN, "User cannot update this comment");
+            throw new ResponseStatusException(FORBIDDEN, "Bạn không thể sửa bình luận này.");
         }
         comment.setCommentText(request.getCommentText());
         commentRepo.save(comment);
@@ -93,7 +93,7 @@ public class CommentService {
     public void deleteComment(UUID commentId, UUID userId) {
         UserArticleComment comment = getCommentEntity(commentId);
         if (!comment.getUserId().equals(userId)) {
-            throw new ResponseStatusException(FORBIDDEN, "User cannot delete this comment");
+            throw new ResponseStatusException(FORBIDDEN, "Bạn không thể xóa bình luận này.");
         }
         commentRepo.delete(comment);
     }
@@ -133,7 +133,7 @@ public class CommentService {
 
     private UserArticleComment getCommentEntity(UUID commentId) {
         return commentRepo.findById(commentId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Comment not found"));
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Không tìm thấy bình luận."));
     }
 
     private void setCommentStatus(UUID commentId, String rawStatus) {
@@ -146,12 +146,12 @@ public class CommentService {
 
     private String normalizeStatus(String rawStatus) {
         if (rawStatus == null) {
-            throw new ResponseStatusException(BAD_REQUEST, "Comment status is required");
+            throw new ResponseStatusException(BAD_REQUEST, "Trạng thái bình luận là bắt buộc.");
         }
 
         String status = rawStatus.trim().toUpperCase(Locale.ROOT);
         if (!List.of(APPROVED, PENDING, REJECTED, HIDDEN).contains(status)) {
-            throw new ResponseStatusException(BAD_REQUEST, "Unsupported comment status");
+            throw new ResponseStatusException(BAD_REQUEST, "Trạng thái bình luận không được hỗ trợ.");
         }
         return status;
     }

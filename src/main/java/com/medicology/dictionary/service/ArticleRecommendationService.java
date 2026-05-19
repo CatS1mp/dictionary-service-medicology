@@ -197,7 +197,7 @@ public class ArticleRecommendationService {
                         .title(article.getName())
                         .slug(article.getSlug())
                         .matchScore(0d)
-                        .reason("Khong co bai du lien quan theo tag, uu tien bai duoc xem nhieu va ban chua doc.")
+                        .reason("Không có bài đủ liên quan theo thẻ, ưu tiên bài được xem nhiều và bạn chưa đọc.")
                         .source("fallback_popular_unread")
                         .totalViews(viewsByArticleId.getOrDefault(article.getId(), 0L))
                         .tags(tagsByArticleId.getOrDefault(article.getId(), List.of()))
@@ -256,7 +256,7 @@ public class ArticleRecommendationService {
                 - score range must be [0, 1]
                 - choose at most %d items
                 - do not invent articleId outside candidate list
-                - reason must be short and practical
+                - reason must be short, practical, in Vietnamese with full diacritics (tiếng Việt có dấu)
                 """.formatted(limit, safeText(attemptsContext), safeText(articleContext), limit);
     }
 
@@ -392,7 +392,7 @@ public class ArticleRecommendationService {
 
     private String normalizeReason(String raw) {
         if (raw == null || raw.isBlank()) {
-            return "Bai viet lien quan den cac chu de ban vua hoc.";
+            return "Bài viết liên quan đến các chủ đề bạn vừa học.";
         }
         return truncate(raw.trim(), 240);
     }

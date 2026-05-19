@@ -32,7 +32,7 @@ public class ArticleQaService {
 
     private static final Logger log = LoggerFactory.getLogger(ArticleQaService.class);
     private static final String DISCLAIMER =
-            "Thong tin tham khao tu bai viet, khong thay the tu van y khoa chuyen mon.";
+            "Thông tin tham khảo từ bài viết, không thay thế tư vấn y khoa chuyên môn.";
 
     private final DictionaryAiProperties aiProperties;
     private final ArticleRepository articleRepository;
@@ -46,28 +46,28 @@ public class ArticleQaService {
 
         Article article = articleRepository
                 .findById(articleId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Article not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy bài viết."));
         if (!Boolean.TRUE.equals(article.getIsPublished())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Article is not published");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bài viết chưa được xuất bản.");
         }
 
         ensureQaEnabled();
         if (!rateLimiter.tryConsume(userId, aiProperties.getQaDailyLimitPerUser())) {
-            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Da vuot gioi han cau hoi AI trong ngay.");
+            throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS, "Đã vượt giới hạn câu hỏi AI trong ngày.");
         }
         List<ArticleContentSection> sections = contentContextBuilder.buildSections(article);
         String articleContext = contentContextBuilder.buildPromptContext(
                 sections, question, Math.max(1000, aiProperties.getQaMaxContextChars()));
 
         if (articleContext.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Article has no readable content for Q&A");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bài viết không có nội dung để hỏi đáp.");
         }
 
         String prompt = buildPrompt(article, articleContext, question, normalizeConversation(request));
         String aiJson = geminiClient
                 .generateJsonText(prompt, GeminiGenerateOptions.jsonDefaults())
                 .orElseThrow(() -> new ResponseStatusException(
-                        HttpStatus.SERVICE_UNAVAILABLE, "AI service is temporarily unavailable"));
+                        HttpStatus.SERVICE_UNAVAILABLE, "Dịch vụ AI tạm thời không khả dụng."));
 
         try {
             JsonNode parsed = objectMapper.readTree(aiJson);
@@ -78,7 +78,7 @@ public class ArticleQaService {
             List<ArticleQaCitationResponse> citations = parseCitations(parsed.path("citations"), validSectionIds);
 
             if (!outOfScope && answer.isBlank()) {
-                answer = "Khong tim thay thong tin phu hop trong bai viet.";
+                answer = "Không tìm thấy thông tin phù hợp trong bài viết.";
                 outOfScope = true;
             }
 
@@ -100,21 +100,21 @@ public class ArticleQaService {
             throw ex;
         } catch (Exception ex) {
             log.warn("dictionary_article_qa_parse_failed articleId={} message={}", articleId, ex.getMessage());
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "AI response could not be parsed");
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Không phân tích được phản hồi AI.");
         }
     }
 
     public ArticleQaSuggestedQuestionsResponse suggestedQuestions(UUID articleId) {
         Article article = articleRepository
                 .findById(articleId)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Article not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Không tìm thấy bài viết."));
         if (!Boolean.TRUE.equals(article.getIsPublished())) {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Article is not published");
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Bài viết chưa được xuất bản.");
         }
 
         List<ArticleContentSection> sections = contentContextBuilder.buildSections(article);
         LinkedHashSet<String> questions = new LinkedHashSet<>();
-        questions.add("Tom tat noi dung chinh cua bai viet");
+        questions.add("Tóm tắt nội dung chính của bài viết");
 
         for (ArticleContentSection section : sections) {
             if (questions.size() >= 4) {
@@ -123,7 +123,7 @@ public class ArticleQaService {
             if (section.heading() == null || section.heading().isBlank()) {
                 continue;
             }
-            questions.add("Giai thich muc: " + section.heading());
+            questions.add("Giải thích mục: " + section.heading());
         }
 
         return ArticleQaSuggestedQuestionsResponse.builder()
@@ -133,10 +133,10 @@ public class ArticleQaService {
 
     private void ensureQaEnabled() {
         if (!aiProperties.isQaEnabled()) {
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Article Q&A is disabled");
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Hỏi đáp bài viết đang tắt.");
         }
         if (!geminiClient.isConfigured()) {
-            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "AI service is not configured");
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE, "Dịch vụ AI chưa được cấu hình.");
         }
     }
 
@@ -181,7 +181,8 @@ public class ArticleQaService {
                 - Do not provide personal diagnosis or treatment plans.
                 - Do not invent drugs, doses, or facts outside the article.
                 - When outOfScope=false, include at least one citation with a valid sectionId from the article sections.
-                - Keep answer concise and practical in Vietnamese.
+                - Keep answer concise and practical in Vietnamese with full diacritics (tiếng Việt có dấu).
+                - When outOfScope=false, reason in citations is not required; answer must use proper Vietnamese diacritics.
                 - quote must be short (max 200 chars).
                 """.formatted(
                 safe(article.getName()),
@@ -233,12 +234,12 @@ public class ArticleQaService {
 
     private String normalizeQuestion(String raw) {
         if (raw == null || raw.isBlank()) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "question is required");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Câu hỏi là bắt buộc.");
         }
         String trimmed = raw.trim();
         int max = Math.max(50, aiProperties.getQaMaxQuestionChars());
         if (trimmed.length() > max) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "question is too long");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Câu hỏi quá dài.");
         }
         return trimmed;
     }

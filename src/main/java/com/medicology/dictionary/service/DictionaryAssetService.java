@@ -28,14 +28,14 @@ public class DictionaryAssetService {
 
     public DictionaryAssetUploadResponse upload(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new ResponseStatusException(BAD_REQUEST, "File upload is required");
+            throw new ResponseStatusException(BAD_REQUEST, "Cần tải lên tệp tin.");
         }
         String contentType = file.getContentType() == null ? "" : file.getContentType().toLowerCase();
         if (!assetProperties.getAllowedTypes().contains(contentType)) {
-            throw new ResponseStatusException(BAD_REQUEST, "Unsupported file type: " + contentType);
+            throw new ResponseStatusException(BAD_REQUEST, "Loại tệp không được hỗ trợ: " + contentType);
         }
         if (file.getSize() > assetProperties.getMaxSizeBytes()) {
-            throw new ResponseStatusException(BAD_REQUEST, "File size exceeds max limit");
+            throw new ResponseStatusException(BAD_REQUEST, "Kích thước tệp vượt giới hạn cho phép.");
         }
 
         String assetId = UUID.randomUUID().toString();
@@ -61,7 +61,7 @@ public class DictionaryAssetService {
             Files.createDirectories(destination.getParent());
             Files.copy(file.getInputStream(), destination, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException ex) {
-            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Cannot persist uploaded asset");
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Không lưu được tệp đã tải lên.");
         }
 
         return DictionaryAssetUploadResponse.builder()
@@ -86,20 +86,20 @@ public class DictionaryAssetService {
 
     public Resource loadAsResource(String fileName) {
         if (!StringUtils.hasText(fileName) || fileName.contains("..") || fileName.contains("/") || fileName.contains("\\")) {
-            throw new ResponseStatusException(BAD_REQUEST, "Invalid file name");
+            throw new ResponseStatusException(BAD_REQUEST, "Tên tệp không hợp lệ.");
         }
         Path candidate = resolveStorageDirectory().resolve(fileName).normalize();
         try {
             if (!Files.exists(candidate) || !Files.isRegularFile(candidate)) {
-                throw new ResponseStatusException(NOT_FOUND, "Asset not found");
+                throw new ResponseStatusException(NOT_FOUND, "Không tìm thấy tệp.");
             }
             Resource resource = new UrlResource(candidate.toUri());
             if (!resource.exists()) {
-                throw new ResponseStatusException(NOT_FOUND, "Asset not found");
+                throw new ResponseStatusException(NOT_FOUND, "Không tìm thấy tệp.");
             }
             return resource;
         } catch (IOException ex) {
-            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Cannot read stored asset");
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Không đọc được tệp đã lưu.");
         }
     }
 

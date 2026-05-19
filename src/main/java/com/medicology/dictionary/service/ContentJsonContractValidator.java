@@ -18,7 +18,7 @@ public class ContentJsonContractValidator {
 
     public void validateOrThrow(String rawContentJson) {
         if (rawContentJson == null || rawContentJson.isBlank()) {
-            throw new ResponseStatusException(BAD_REQUEST, "contentJson is required");
+            throw new ResponseStatusException(BAD_REQUEST, "contentJson là bắt buộc.");
         }
 
         final JsonNode root;

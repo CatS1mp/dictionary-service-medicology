@@ -46,11 +46,11 @@ public class TagService {
     @Transactional
     public void assignTagsToArticle(UUID articleId, List<UUID> tagIds) {
         articleRepository.findById(articleId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Article not found"));
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Không tìm thấy bài viết."));
         Set<UUID> distinctTagIds = new LinkedHashSet<>(tagIds);
         List<Tag> tags = tagRepository.findByIdIn(distinctTagIds);
         if (tags.size() != distinctTagIds.size()) {
-            throw new ResponseStatusException(BAD_REQUEST, "One or more tags do not exist");
+            throw new ResponseStatusException(BAD_REQUEST, "Một hoặc nhiều thẻ không tồn tại.");
         }
 
         articleTagRepository.deleteByArticleId(articleId);
@@ -62,14 +62,14 @@ public class TagService {
 
     public TagResponse getTagById(UUID id) {
         Tag tag = tagRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Tag not found"));
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Không tìm thấy thẻ."));
         return mapToResponse(tag);
     }
 
     @Transactional
     public void updateTag(UUID id, TagRequest request) {
         Tag tag = tagRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Tag not found"));
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Không tìm thấy thẻ."));
         tag.setName(request.getName());
         tagRepository.save(tag);
     }

@@ -63,7 +63,7 @@ public class ComponentDefinitionService {
 
     private ComponentDefinition getComponentEntity(UUID id) {
         return componentDefinitionRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Component not found"));
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Không tìm thấy thành phần."));
     }
 
     private ComponentDefinitionResponse mapToResponse(ComponentDefinition component) {

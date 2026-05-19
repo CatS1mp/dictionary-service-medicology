@@ -94,6 +94,6 @@ public class InteractionService {
 
     private Article ensureArticleExists(UUID articleId) {
         return articleRepo.findById(articleId)
-                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Article not found"));
+                .orElseThrow(() -> new ResponseStatusException(NOT_FOUND, "Không tìm thấy bài viết."));
     }
 }

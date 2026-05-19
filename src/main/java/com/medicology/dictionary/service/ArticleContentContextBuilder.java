@@ -28,7 +28,7 @@ public class ArticleContentContextBuilder {
 
     public List<ArticleContentSection> buildSections(Article article) {
         String fallbackTitle = article.getName() == null || article.getName().isBlank()
-                ? "Noi dung bai viet"
+                ? "Nội dung bài viết"
                 : article.getName().trim();
         try {
             return buildSectionsFromJson(article.getContentJson(), fallbackTitle);
@@ -130,7 +130,7 @@ public class ArticleContentContextBuilder {
     }
 
     private ArticleContentSection createSection(String heading, int level, Map<String, Integer> sectionIdCount) {
-        String normalizedHeading = heading == null || heading.isBlank() ? "Noi dung" : heading.trim();
+        String normalizedHeading = heading == null || heading.isBlank() ? "Nội dung" : heading.trim();
         String baseId = slugify(normalizedHeading);
         int next = sectionIdCount.merge(baseId, 1, Integer::sum);
         String id = next == 1 ? baseId : baseId + "-" + next;
