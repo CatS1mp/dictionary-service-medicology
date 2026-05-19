@@ -71,6 +71,6 @@ class ContentJsonContractValidatorTest {
 
         assertThatThrownBy(() -> validator.validateOrThrow(invalidJson))
                 .isInstanceOf(ResponseStatusException.class)
-                .hasMessageContaining("version must be 2");
+                .hasMessageContaining("contentJson.version phải là 2");
     }
 }

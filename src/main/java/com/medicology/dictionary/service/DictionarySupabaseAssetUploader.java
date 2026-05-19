@@ -35,7 +35,7 @@ public class DictionarySupabaseAssetUploader {
     public String uploadToPublicBucket(MultipartFile file, String objectPathRelativeToBucket) {
         DictionaryAssetProperties.Supabase cfg = assetProperties.getSupabase();
         if (!isConfigured(cfg)) {
-            throw new IllegalStateException("Supabase storage is not configured");
+            throw new IllegalStateException("Chưa cấu hình lưu trữ Supabase.");
         }
 
         String supabaseUrl = normalizeBaseUrl(cfg.getUrl());
@@ -62,16 +62,16 @@ public class DictionarySupabaseAssetUploader {
                     String.class);
 
             if (!response.getStatusCode().is2xxSuccessful()) {
-                throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Supabase did not accept the upload");
+                throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Supabase không chấp nhận tệp tải lên.");
             }
 
             return supabaseUrl + "/storage/v1/object/public/" + encodedPath;
         } catch (HttpStatusCodeException ex) {
             throw new ResponseStatusException(
                     INTERNAL_SERVER_ERROR,
-                    "Supabase upload failed: " + ex.getStatusCode() + " " + ex.getResponseBodyAsString());
+                    "Tải lên Supabase thất bại: " + ex.getStatusCode() + " " + ex.getResponseBodyAsString());
         } catch (IOException | RestClientException ex) {
-            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Supabase upload failed: " + ex.getMessage());
+            throw new ResponseStatusException(INTERNAL_SERVER_ERROR, "Tải lên Supabase thất bại: " + ex.getMessage());
         }
     }
 

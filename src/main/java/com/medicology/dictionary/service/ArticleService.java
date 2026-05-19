@@ -177,7 +177,7 @@ public class ArticleService {
         if (request.getContentVersion() == null || request.getContentVersion() != CONTENT_SCHEMA_VERSION) {
             throw new ResponseStatusException(
                     BAD_REQUEST,
-                    "contentVersion must be " + CONTENT_SCHEMA_VERSION
+                    "contentVersion phải là " + CONTENT_SCHEMA_VERSION
             );
         }
         contentJsonContractValidator.validateOrThrow(request.getContentJson());

@@ -25,30 +25,29 @@ public class ContentJsonContractValidator {
         try {
             root = objectMapper.readTree(rawContentJson);
         } catch (JsonProcessingException ex) {
-            throw new ResponseStatusException(BAD_REQUEST, "contentJson must be a valid JSON object");
+            throw new ResponseStatusException(BAD_REQUEST, "contentJson phải là đối tượng JSON hợp lệ.");
         }
 
         if (!root.isObject()) {
-            throw new ResponseStatusException(BAD_REQUEST, "contentJson root must be an object");
+            throw new ResponseStatusException(BAD_REQUEST, "Gốc contentJson phải là đối tượng.");
         }
 
         JsonNode versionNode = root.get("version");
         if (versionNode == null || !versionNode.canConvertToInt() || versionNode.intValue() != REQUIRED_CONTENT_VERSION) {
             throw new ResponseStatusException(
                     BAD_REQUEST,
-                    "contentJson.version must be " + REQUIRED_CONTENT_VERSION
-            );
+                    "contentJson.version phải là " + REQUIRED_CONTENT_VERSION);
         }
 
         JsonNode blocksNode = root.get("blocks");
         if (blocksNode == null || !blocksNode.isArray()) {
-            throw new ResponseStatusException(BAD_REQUEST, "contentJson.blocks must be an array");
+            throw new ResponseStatusException(BAD_REQUEST, "contentJson.blocks phải là mảng.");
         }
 
         for (int i = 0; i < blocksNode.size(); i += 1) {
             JsonNode block = blocksNode.get(i);
             if (!block.isObject()) {
-                throw new ResponseStatusException(BAD_REQUEST, "blocks[" + i + "] must be an object");
+                throw new ResponseStatusException(BAD_REQUEST, "blocks[" + i + "] phải là đối tượng.");
             }
 
             requireNonEmptyText(block, "id", i);
@@ -58,16 +57,16 @@ public class ContentJsonContractValidator {
 
             JsonNode levelNode = block.get("level");
             if (levelNode == null || !levelNode.canConvertToInt()) {
-                throw new ResponseStatusException(BAD_REQUEST, "blocks[" + i + "].level must be an integer (1..3)");
+                throw new ResponseStatusException(BAD_REQUEST, "blocks[" + i + "].level phải là số nguyên (1..3).");
             }
             int level = levelNode.intValue();
             if (level < 1 || level > 3) {
-                throw new ResponseStatusException(BAD_REQUEST, "blocks[" + i + "].level must be in range 1..3");
+                throw new ResponseStatusException(BAD_REQUEST, "blocks[" + i + "].level phải trong khoảng 1..3.");
             }
 
             JsonNode dataNode = block.get("data");
             if (dataNode == null || !dataNode.isObject()) {
-                throw new ResponseStatusException(BAD_REQUEST, "blocks[" + i + "].data must be an object");
+                throw new ResponseStatusException(BAD_REQUEST, "blocks[" + i + "].data phải là đối tượng.");
             }
         }
     }
@@ -77,8 +76,7 @@ public class ContentJsonContractValidator {
         if (valueNode == null || !valueNode.isTextual() || valueNode.asText().trim().isEmpty()) {
             throw new ResponseStatusException(
                     BAD_REQUEST,
-                    "blocks[" + blockIndex + "]." + fieldName + " must be a non-empty string"
-            );
+                    "blocks[" + blockIndex + "]." + fieldName + " phải là chuỗi không rỗng.");
         }
     }
 }
