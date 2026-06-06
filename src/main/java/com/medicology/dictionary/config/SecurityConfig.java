@@ -3,6 +3,7 @@ package com.medicology.dictionary.config;
 import org.springframework.context.annotation.Bean;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -53,12 +54,15 @@ public class SecurityConfig {
                                 // ở đây
                                 ).permitAll()
 
-                                // 2. Mở cửa cho API Auth của Medicology (kiểm tra kỹ có /medicology ở
-                                // đầu
-                                // không)
+                                // 2. Mở cửa cho API Auth
                                 .requestMatchers("/api/v1/auth/**").permitAll()
 
-                                // 3. Các request khác mới cần login
+                                // 3. Public read access for dictionary content
+                                .requestMatchers(HttpMethod.GET, "/api/dictionary/articles", "/api/dictionary/articles/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/dictionary/assets/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/dictionary/tags", "/api/dictionary/tags/**").permitAll()
+
+                                // 4. Các request khác mới cần login
                                 .anyRequest().authenticated())
                         .sessionManagement(session -> session
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
